@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>C:/Github/2025-Jan-DMIT1514-01-assignments/animation-and-inputs-nfootz/Content/hollowknight.png</SourceFile>
-  <SourceTime>2025-01-26T17:07:28.6828675-07:00</SourceTime>
+  <SourceTime>2025-01-26T19:38:01.5754838-07:00</SourceTime>
   <DestFile>C:/Github/2025-Jan-DMIT1514-01-assignments/animation-and-inputs-nfootz/Content/bin/DesktopGL/Content/hollowknight.xnb</DestFile>
-  <DestTime>2025-01-26T17:07:54.174994-07:00</DestTime>
+  <DestTime>2025-01-26T19:38:24.6193803-07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2024-08-16T11:05:56-06:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

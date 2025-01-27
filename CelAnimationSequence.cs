@@ -101,4 +101,22 @@ public class CelAnimationSequence
         get { return xOffset; }
         set { xOffset = value; }
     }
+
+    //Changes the values of a CelAnimationSequence if a valid value is passed for that variable
+    public void ChangeAnimationSequence(int celWidth, int celHeight, int celCount, float celTime, int y, int xOffset)
+    {
+        if (celWidth > 0)
+            this.CelWidth = celWidth;
+        if (celHeight > 0)
+            this.CelHeight = celHeight;
+        if (celCount > 0)
+            this.CelCount = celCount;
+        if (celTime > 0)
+            this.CelTime = celTime;
+        if (y >= 0)
+            this.Y = y;
+        if (xOffset >= 0)
+            this.XOffset = xOffset;
+    }
+
 }

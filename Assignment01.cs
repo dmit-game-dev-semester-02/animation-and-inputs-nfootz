@@ -10,7 +10,7 @@ public class Assignment01 : Game
     private SpriteBatch _spriteBatch;
     private Texture2D _background, _cloud;
     private float _mummyX = 0, _mummyY = 300, _mummyXSpeed = 3;
-    private float _hollowKnightX = 500, _hollowKnightY = 300, _hollowKnightXSpeed = 3, _hollowKnightYSpeed = 0;
+    private float _hollowKnightX = 500, _hollowKnightY = 300, _hollowKnightXSpeed = 5, _hollowKnightYSpeed = 0;
     private const int _WindowWidth = 612;
     private const int _WindowHeight = 367;
     private const int _GroundHeight = 293;
@@ -83,44 +83,53 @@ public class Assignment01 : Game
 
         #region Hollow Knight Movement
 
-        _hollowKnightYSpeed += 0.6f;
+        //set gravity
+        if ((kbCurrentState.IsKeyDown(Keys.W) || kbCurrentState.IsKeyDown(Keys.Space)) && _hollowKnightYSpeed < 0)
+            _hollowKnightYSpeed += 0.7f;
+        else
+            _hollowKnightYSpeed += 1.1f;
 
-        if (kbCurrentState.IsKeyDown(Keys.A))
+        if (kbCurrentState.IsKeyDown(Keys.A))//move left
         {
             _hollowKnightX -= _hollowKnightXSpeed;
             _hollowKnightSpriteEffect = SpriteEffects.FlipHorizontally;
             if (_hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)
-                ChangeAnimationSequence(_hollowKnightSequence, 80, 75, 8, 1/16f, 0, 80);
+                _hollowKnightSequence.ChangeAnimationSequence(80, 75, 8, 1/16f, 0, 80);
         }
-        if (kbCurrentState.IsKeyDown(Keys.D))
+        if (kbCurrentState.IsKeyDown(Keys.D))//move right
         {
             _hollowKnightX += _hollowKnightXSpeed;
             _hollowKnightSpriteEffect = SpriteEffects.None;
             if (_hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)
-                ChangeAnimationSequence(_hollowKnightSequence, 80, 75, 8, 1/16f, 0, 80);
+                _hollowKnightSequence.ChangeAnimationSequence(80, 75, 8, 1/16f, 0, 80);
         }
-        if (!kbCurrentState.IsKeyDown(Keys.D) && !kbCurrentState.IsKeyDown(Keys.A) && _hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)
+        if (!kbCurrentState.IsKeyDown(Keys.D) && !kbCurrentState.IsKeyDown(Keys.A) && _hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)//standing
         {
-            ChangeAnimationSequence(_hollowKnightSequence, 80, 75, 1, 1/16f, 0, 0);
+            _hollowKnightSequence.ChangeAnimationSequence(80, 75, 1, 1/16f, 0, 0);
         }
-        if ((kbCurrentState.IsKeyDown(Keys.W) || kbCurrentState.IsKeyDown(Keys.Space)) && _hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)
+        if ((kbCurrentState.IsKeyDown(Keys.W) || kbCurrentState.IsKeyDown(Keys.Space)) && _hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)//jump
         {
-            _hollowKnightYSpeed = -12;
+            _hollowKnightYSpeed = -16;
+            _hollowKnightSequence.ChangeAnimationSequence(80, 75, 3, 1/16f, 80*9, 80*2);
+        }
+        if (_hollowKnightY < _GroundHeight - _hollowKnightSequence.CelHeight && _hollowKnightYSpeed > 0)//change animation when falling
+        {
+            _hollowKnightSequence.ChangeAnimationSequence(80, 75, 3, 1/16f, 80*9, 80*5);
         }
 
-        
-        _hollowKnightY += _hollowKnightYSpeed;
+        _hollowKnightY += _hollowKnightYSpeed;//apply gravity
 
-        if (_hollowKnightX < 0)
+        if (_hollowKnightX < 0)//left screen collision
             _hollowKnightX = 0;
-        if (_hollowKnightX > _WindowWidth - _hollowKnightSequence.CelWidth)
+        if (_hollowKnightX > _WindowWidth - _hollowKnightSequence.CelWidth)//right screen collision
             _hollowKnightX = _WindowWidth - _hollowKnightSequence.CelWidth;
-        if (_hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)
+        if (_hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)//ground collision
         {
             _hollowKnightY = _GroundHeight - _hollowKnightSequence.CelHeight;
             _hollowKnightYSpeed = 0;
         }
         #endregion
+
         _kbPreviousState = kbCurrentState;
         base.Update(gameTime);
     }
@@ -137,22 +146,5 @@ public class Assignment01 : Game
         _spriteBatch.End();
 
         base.Draw(gameTime);
-    }
-
-    //Changes the values of a CelAnimationSequence if a valid value is passed for that variable
-    public static void ChangeAnimationSequence(CelAnimationSequence sequence, int celWidth, int celHeight, int celCount, float celTime, int y = 0, int xOffset = 0)
-    {
-        if (celWidth > 0)
-            sequence.CelWidth = celWidth;
-        if (celHeight > 0)
-            sequence.CelHeight = celHeight;
-        if (celCount > 0)
-            sequence.CelCount = celCount;
-        if (celTime > 0)
-            sequence.CelTime = celTime;
-        if (y >= 0)
-            sequence.Y = y;
-        if (xOffset >= 0)
-            sequence.XOffset = xOffset;
     }
 }

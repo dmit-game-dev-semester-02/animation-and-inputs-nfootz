@@ -55,6 +55,7 @@ public class CelAnimationPlayer
                 celIndex = (celIndex + 1) % celAnimationSequence.CelCount;
 
                 celSourceRectangle.X = celIndex * celSourceRectangle.Width + this.celAnimationSequence.XOffset;
+                celSourceRectangle.Y = this.celAnimationSequence.Y;
             }
         }
     }
