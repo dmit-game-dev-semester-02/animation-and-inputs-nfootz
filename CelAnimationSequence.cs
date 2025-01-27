@@ -19,6 +19,7 @@ public class CelAnimationSequence
     protected int celWidth;
     protected int celHeight;
     protected int y;
+    protected int xOffset;
 
     // Calculated count of cels in the sequence
     protected int celCount;
@@ -26,12 +27,13 @@ public class CelAnimationSequence
     /// <summary>
     /// Constructs a new CelAnimationSequence.
     /// </summary>        
-    public CelAnimationSequence(Texture2D texture, int celWidth, int celHeight, int celCount, float celTime, int y = 0)
+    public CelAnimationSequence(Texture2D texture, int celWidth, int celHeight, int celCount, float celTime, int y = 0, int xOffset = 0)
     {
         this.texture = texture;
         this.celWidth = celWidth;
         this.celTime = celTime;
         this.y = y;
+        this.xOffset = xOffset;
 
         if (celHeight <= 0)
             this.celHeight = Texture.Height;
@@ -58,6 +60,7 @@ public class CelAnimationSequence
     public float CelTime
     {
         get { return celTime; }
+        set { celTime = value; }
     }
 
     /// <summary>
@@ -91,5 +94,11 @@ public class CelAnimationSequence
     {
         get { return y; }
         set { y = value; }
+    }
+
+    public int XOffset
+    {
+        get { return xOffset; }
+        set { xOffset = value; }
     }
 }

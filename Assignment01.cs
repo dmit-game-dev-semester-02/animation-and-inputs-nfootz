@@ -10,7 +10,7 @@ public class Assignment01 : Game
     private SpriteBatch _spriteBatch;
     private Texture2D _background, _cloud;
     private float _mummyX = 0, _mummyY = 300, _mummyXSpeed = 3;
-    private float _hollowKnightX = 500, _hollowKnightY = 100, _hollowKnightXSpeed = 3;
+    private float _hollowKnightX = 500, _hollowKnightY = 300, _hollowKnightXSpeed = 3, _hollowKnightYSpeed = 0;
     private const int _WindowWidth = 612;
     private const int _WindowHeight = 367;
     private const int _GroundHeight = 293;
@@ -48,7 +48,7 @@ public class Assignment01 : Game
         _mummyAnimation.Play(_mummySequence);
 
         Texture2D hollowKnightSpriteSheet = Content.Load<Texture2D>("hollowknight");
-        _hollowKnightSequence = new CelAnimationSequence(hollowKnightSpriteSheet, 80, 75, 9, 1/9f);
+        _hollowKnightSequence = new CelAnimationSequence(hollowKnightSpriteSheet, 80, 75, 1, 1/16f, 0, 0);
         _hollowKnightAnimation = new CelAnimationPlayer();
         _hollowKnightAnimation.Play(_hollowKnightSequence);
     }
@@ -61,8 +61,6 @@ public class Assignment01 : Game
         _hollowKnightAnimation.Update(gameTime);
 
         #region Mummy Movement
-        if (_mummyY > _GroundHeight - _mummySequence.CelHeight)
-            _mummyY = _GroundHeight - _mummySequence.CelHeight;
 
         if (kbCurrentState.IsKeyDown(Keys.Left))
         {
@@ -79,8 +77,50 @@ public class Assignment01 : Game
             _mummyX = 0;
         if (_mummyX > _WindowWidth - _mummySequence.CelWidth)
             _mummyX = _WindowWidth - _mummySequence.CelWidth;
+        if (_mummyY > _GroundHeight - _mummySequence.CelHeight)
+            _mummyY = _GroundHeight - _mummySequence.CelHeight;
         #endregion
 
+        #region Hollow Knight Movement
+
+        _hollowKnightYSpeed += 0.6f;
+
+        if (kbCurrentState.IsKeyDown(Keys.A))
+        {
+            _hollowKnightX -= _hollowKnightXSpeed;
+            _hollowKnightSpriteEffect = SpriteEffects.FlipHorizontally;
+            if (_hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)
+                ChangeAnimationSequence(_hollowKnightSequence, 80, 75, 8, 1/16f, 0, 80);
+        }
+        if (kbCurrentState.IsKeyDown(Keys.D))
+        {
+            _hollowKnightX += _hollowKnightXSpeed;
+            _hollowKnightSpriteEffect = SpriteEffects.None;
+            if (_hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)
+                ChangeAnimationSequence(_hollowKnightSequence, 80, 75, 8, 1/16f, 0, 80);
+        }
+        if (!kbCurrentState.IsKeyDown(Keys.D) && !kbCurrentState.IsKeyDown(Keys.A) && _hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)
+        {
+            ChangeAnimationSequence(_hollowKnightSequence, 80, 75, 1, 1/16f, 0, 0);
+        }
+        if ((kbCurrentState.IsKeyDown(Keys.W) || kbCurrentState.IsKeyDown(Keys.Space)) && _hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)
+        {
+            _hollowKnightYSpeed = -12;
+        }
+
+        
+        _hollowKnightY += _hollowKnightYSpeed;
+
+        if (_hollowKnightX < 0)
+            _hollowKnightX = 0;
+        if (_hollowKnightX > _WindowWidth - _hollowKnightSequence.CelWidth)
+            _hollowKnightX = _WindowWidth - _hollowKnightSequence.CelWidth;
+        if (_hollowKnightY >= _GroundHeight - _hollowKnightSequence.CelHeight)
+        {
+            _hollowKnightY = _GroundHeight - _hollowKnightSequence.CelHeight;
+            _hollowKnightYSpeed = 0;
+        }
+        #endregion
         _kbPreviousState = kbCurrentState;
         base.Update(gameTime);
     }
@@ -97,5 +137,22 @@ public class Assignment01 : Game
         _spriteBatch.End();
 
         base.Draw(gameTime);
+    }
+
+    //Changes the values of a CelAnimationSequence if a valid value is passed for that variable
+    public static void ChangeAnimationSequence(CelAnimationSequence sequence, int celWidth, int celHeight, int celCount, float celTime, int y = 0, int xOffset = 0)
+    {
+        if (celWidth > 0)
+            sequence.CelWidth = celWidth;
+        if (celHeight > 0)
+            sequence.CelHeight = celHeight;
+        if (celCount > 0)
+            sequence.CelCount = celCount;
+        if (celTime > 0)
+            sequence.CelTime = celTime;
+        if (y >= 0)
+            sequence.Y = y;
+        if (xOffset >= 0)
+            sequence.XOffset = xOffset;
     }
 }
